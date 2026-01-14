@@ -11,13 +11,14 @@ jobs:
   test:
     environment: testing
     runs-on: ubuntu-latest
-    container:
-      image: node:16
+    # container:
+    #   image: node:16
     env:
       #MONGODB_CONNECTION_PROTOCOL: mongodb+srv
       MONGODB_CONNECTION_PROTOCOL: mongodb  # Use for mongodb container
       #MONGODB_CLUSTER_ADDRESS: cluster0.wojz4zy.mongodb.net
-      MONGODB_CLUSTER_ADDRESS: mongodb  #same as service name for 'mongodb'
+      MONGODB_CLUSTER_ADDRESS: mongodb  # when job runs in container - same as service name for 'mongodb'
+      MONGODB_CLUSTER_ADDRESS: 127.0.0.1:27017  # when job runs on the runner instead of container
       # MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
       # MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
       MONGODB_USERNAME: root
@@ -26,6 +27,8 @@ jobs:
     services:
       mongodb:
         image: mongo
+        ports:
+          - 27017:27017 # open port when job runs on the runner instead of container
         env:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: example
